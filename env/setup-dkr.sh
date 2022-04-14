@@ -17,8 +17,10 @@ unzip -d /usr/local/lib/android/sdk android-sdk.zip
 rm -f android-sdk.zip
 echo y | /usr/local/lib/android/sdk/tools/bin/sdkmanager "build-tools;30.0.2" "ndk;22.1.7171670" >/dev/null
 
+# XXX: this is a horrible workaround for env/docker.sh due to the limited way git fixed CVE-2022-24765
+chmod 777 ~
+
 uid=$1
 shift
 apt-get -y install sudo
-chmod 755 ~
 sudo -u "#${uid}" "$@"
