@@ -20,7 +20,11 @@ echo y | /usr/local/lib/android/sdk/tools/bin/sdkmanager "build-tools;30.0.2" "n
 uid=$1
 shift
 # XXX: this is a horrible workaround for env/docker.sh due to the limited way git fixed CVE-2022-24765
-apt-get -y install sudo
-chmod 755 ~
-chown -R $u /root
-sudo -u "#${uid}" "$@"
+if [[ ${uid} -eq 0 ]]; then
+    exec "$@"
+else
+    apt-get -y install sudo
+    chmod 755 ~
+    chown -R "${uid}" ~
+    exec sudo -u "#${uid}" "$@"
+fi
